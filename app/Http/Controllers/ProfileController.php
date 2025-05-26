@@ -27,7 +27,7 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        // $image = $data['image'] ?? null; 
+        $image = $data['image'] ?? null; 
 
         // if($image) {
         //     $data['image'] = $image->store('avatars', 'public');
@@ -41,8 +41,10 @@ class ProfileController extends Controller
         }
 
         $user->save();
-
-        $user->addMediaFromRequest('image')->toMediaCollection('avatar');
+        
+        if($image) {
+            $user->addMediaFromRequest('image')->toMediaCollection('avatar');
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

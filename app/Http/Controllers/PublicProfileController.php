@@ -8,7 +8,11 @@ class PublicProfileController extends Controller
 {
     public function show(User $user)
     {
-        $posts = $user->posts()->latest()->paginate();
+        $posts = $user->posts()
+            ->with(['user', 'media'])
+            ->withCount('claps')
+            ->latest()
+            ->paginate();
 
         return view('profile.show', [
             'user' => $user,

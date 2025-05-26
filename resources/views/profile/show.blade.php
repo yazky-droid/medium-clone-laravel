@@ -22,7 +22,7 @@
                         <p>
                             {{ $user->bio }}
                         </p>
-                        @if (auth()->user() && auth()->user()->id !== $user->id)
+                        @if(auth()->user() && auth()->user()->id !== $user->id)
                             <div class="mt-4">
                                 <button @click="follow()" x-text = "following ? 'Unfollow' : 'Follow' "
                                     :class="following ? 'bg-red-600' : 'bg-emerald-600'"

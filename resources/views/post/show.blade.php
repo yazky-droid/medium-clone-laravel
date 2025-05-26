@@ -13,17 +13,22 @@
                             <a href="{{ route('profile.show', $post->user) }}" class="hover:underline">
                                 {{ $post->user->name }}
                             </a>
-                            @auth
+                            @if(auth()->user() && auth()->user()->id !== $post->user->id)
                                 &middot;
                                 <button x-text="following ? 'Unfollow' :'Follow'"
-                                    :class="following ? 'text-red-600' : 'text-emerald-600'" @click="follow()"></button>
-                            @endauth
+                                :class="following ? 'text-red-600' : 'text-emerald-600'" @click="follow()"></button>
+                            @endif
+                            
+                            @if(auth()->user() && auth()->user()->id === $post->user->id)
+                                &middot;
+                                <button disabled class="text-emerald-700">Author</button>
+                            @endif
                         </x-follow-ctr>
-
+                        
                         <div class="flex gap-2 text-sm text-gray-500">
                             {{ $post->readTime() }} min read
                             &middot;
-                            {{ $post->created_at->format('M d, Y') }}
+                            {{ $post->getCreatedAt() }}
                         </div>
                     </div>
 
