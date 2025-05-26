@@ -4,10 +4,9 @@
     following: {{ $user->isFollowedBy(auth()->user()) ? 'true' : 'false' }},
     followersCount: {{ $user->followers->count() }},
     follow() {
-        this.following = !this.following
         axios.post('/follow/{{ $user->id }}')
-            .then(res => {
-                console.log(res.data)
+        .then(res => {
+                this.following = !this.following
                 this.followersCount = res.data.followersCount
             })
             .catch(err => {
