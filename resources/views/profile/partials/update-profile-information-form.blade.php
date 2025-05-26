@@ -18,7 +18,7 @@
         @method('patch')
 
 
-        @if ($user->image)
+        @if ($user->imageUrl())
             <div>
                 <img src="{{ $user->imageUrl() }}" alt="{{ $user->name }}" class="rounded-full h-20 w-20">
             </div>
