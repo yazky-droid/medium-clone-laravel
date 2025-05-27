@@ -28,6 +28,13 @@ class Post extends Model implements HasMedia
     ];
 
 
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime',
+        ];
+    }
+
     public function registerMediaConversions(?Media $media = null): void
     {
         $this
@@ -88,8 +95,8 @@ class Post extends Model implements HasMedia
         return $media?->getUrl();
     }
 
-    public function getCreatedAt()
+    public function getPublishedAt()
     {
-        return $this->created_at->format('M d, Y');
+        return $this->published_at->format('M d, Y');
     }
 }

@@ -1,19 +1,25 @@
 <div class="flex bg-white border border-gray-200 rounded-lg shadow-sm  mb-8">
 
-    <div class="p-5 flex-1">
-        <a href="{{ route('post.show', [
-            'username' => $post->user->username,
-            'post' => $post->slug
-        ]) }}">
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
-                {{ $post->title }}</h5>
-        </a>
-        <div class="mb-3 font-normal text-gray-700">{{ Str::words($post->content, 20) }}</div>
-        <a href="{{ route('post.show', [
-            'username' => $post->user->username,
-            'post' => $post->slug
-        ]) }}" class="text-sm text-gray-400 flex gap-4">
-            {{ $post->getCreatedAt() }}
+    <div class="p-5 flex justify-between flex-col flex-1">
+        <div>
+            <a href="{{ route('post.show', [
+                'username' => $post->user->username,
+                'post' => $post->slug
+            ]) }}">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                    {{ $post->title }}</h5>
+            </a>
+            <div class="mb-3 font-normal text-gray-700">{{ Str::words($post->content, 20) }}</div>
+        </div>
+        <div class="text-sm text-gray-400 flex gap-4 items-center">
+            <div class="items-center">
+                by
+                <a href="{{ route('profile.show', $post->user->username) }}" class="text-gray-600 hover:underline">
+                    {{ $post->user->username }}
+                </a>
+                at
+                {{ $post->getPublishedAt() }}
+            </div>
             <span class="inline-flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-5">
@@ -22,7 +28,7 @@
                 </svg>
                 {{ $post->claps_count }}
             </span>
-        </a>
+        </div>
     </div>
     <a href="{{ route('post.show', [
             'username' => $post->user->username,

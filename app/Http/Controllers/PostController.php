@@ -19,11 +19,13 @@ class PostController extends Controller
         $user = auth()->user();
 
         $query = Post::with(['user', 'media'])
+            ->where('published_at', '<=', now())
             ->withCount('claps')
-            ->latest();
+            ->orderBy('published_at', 'DESC');
 
         if($user) {
             $ids = $user->following()->pluck('users.id');
+            $ids->push(auth()->id());
             $query->whereIn('user_id', $ids);
         }
 
@@ -51,9 +53,12 @@ class PostController extends Controller
     {
         $data = $request->validated();
 
+
+        $data['user_id'] = Auth::id();
+
+        // we don't use code below bcs we use spatie media library
         // $image = $data['image'];
         // unset($data['image']);
-        $data['user_id'] = Auth::id();
 
         // $imagePath = $image->store('posts', 'public');
         // $data['image'] = $imagePath;
@@ -100,6 +105,7 @@ class PostController extends Controller
         if ($post->user_id !== Auth::id()) {
             abort(403);
         }
+
         $data = $request->validated();
 
         $post->update($data);
@@ -128,11 +134,22 @@ class PostController extends Controller
 
     public function category(Category $category)
     {
-        $posts = $category->posts()
+        $user = auth()->user();
+
+        $query = $category->posts()
+            ->where('published_at', '<=', now())
             ->with(['user', 'media'])
             ->withCount('claps')
-            ->latest()
-            ->simplePaginate(5);
+            ->orderBy('published_at', 'DESC');
+
+        if ($user) {
+            $ids = $user->following()->pluck('users.id');
+            $ids->push(auth()->id());
+
+            $query->whereIn('user_id', $ids);
+        }
+
+        $posts = $query->simplePaginate(5);
 
         return view('post.index', [
             'posts' => $posts,
@@ -145,7 +162,7 @@ class PostController extends Controller
         $posts = $user->posts()
             ->with(['user', 'media'])
             ->withCount('claps')
-            ->latest()
+            ->orderBy('published_at', 'DESC')
             ->simplePaginate(5);
 
         return view('post.index', [
